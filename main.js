@@ -9,38 +9,49 @@ const url = require('url')
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected
-let mainWindow
+let particleWindow
+let consellationWindow
 
 // A function to create the browser window when the app is ready
 function createWindow() {
 
     // Create the browser window.
-    mainWindow = new BrowserWindow({
+    particleWindow = new BrowserWindow({
         width: 800,
         height: 600,
-        // center: true,
-        // frame: false, 
-        // resizable: false,
-        // alwaysOnTop: true,
-        useContentSize: true // when false, width/height will set the size of the whole app, including frames. If true, innerWindow will be set instead, resulting in a bigger app window
+        // useContentSize: true 
+        /*when false, width/height will set the size of the whole app, including frames. If true, 
+        innerWindow will be set instead, resulting in a bigger app window */
+    })
+
+    consellationWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
     })
 
     // Load the index.html of the app
-    mainWindow.loadURL(url.format({
+    particleWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'public', 'index.html'),
         protocol: 'file:',
         slashes: true
     }))
 
+    consellationWindow.loadURL(url.format({
+        pathname: path.join(__dirname, 'public', 'constellation.html'),
+        protocol: 'file:',
+        slashes: true
+    }))
+
     // Open the DevTools on start
-    // mainWindow.webContents.openDevTools("undock")
+    consellationWindow.webContents.openDevTools("undock")
 
     // Emitted when the window is closed
-    mainWindow.on('closed', function() {
-        // Dereference the window object, usually you would store windows
-        // in an array if your app supports multi windows, this is the time
-        // when you should delete the corresponding element
-        mainWindow = null
+    particleWindow.on('closed', function() {
+        particleWindow = null
+    })
+
+    consellationWindow.on('closed', function() {
+        consellationWindow = null
     })
 }
 
@@ -61,7 +72,10 @@ app.on('window-all-closed', function() {
 app.on('activate', function() {
     // On OS X it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (mainWindow === null) {
+    if (particleWindow === null) {
+        createWindow()
+    }
+    if (consellationWindow === null) {
         createWindow()
     }
 })
